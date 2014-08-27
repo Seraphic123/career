@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>com.PhoneGap.c2dm</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/jquery.mobile-1.0.min.css">
+        <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+		<script src="js/jquery.mobile-1.0.min.js"></script>
+    </head>
+    <body>
+        
+        <script type="text/javascript">
+
+							HostURL = "http://163.15.192.205/vany/mobile/regid"; //use REST style
+							var request = $.ajax({
+								url: HostURL,
+								type: "POST",	
+								cache: false,
+								crossDomain: true,
+								success: 
+									function(){
+										$("#result").append('<li>Send regid to proxy server -> OK(3)' + getCurrentTime() + "</li>");
+									},
+								error:
+									function(){
+										$("#result").append('<li>Send regid to proxy server -> Error(3)' + getCurrentTime() + "</li>");
+									},
+								data: {
+									regId:e.regid
+									},
+								contentType: "application/x-www-form-urlencoded; charset=utf-8",
+								dataType: "html"
+							});				
+						}else
+							$("#result").append('<li>No REGID: - in emulator</li>');
+						
+                    break;
+                    
+
+            }
+            
+
+
+         </script>
+		 <div id="index" data-url="index" data-role="page" data-theme="d" >
+			<div data-role="content">
+				<div id="login2" data-theme="b">
+					<div id="id">
+						<center>
+							<h4 for="id" >Device ID</h4>
+							<input type="text" data-theme="b" name="username" id="username" value="demo"/>
+						</center>
+					</div> 
+					<div id ="login" >
+						<input type="button"  id="login1" data-theme="b" value="檢查ID"/>
+					</div>
+				</div> 
+				<div id="result">
+				</div>
+				
+			
+		</div>
+    </body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>com.PhoneGap.c2dm</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/jquery.mobile-1.0.min.css">
+        <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+		<script src="js/jquery.mobile-1.0.min.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+			function getCurrentTime(delimiter)
+			{
+				var myDate = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+				if(!delimiter)
+					myDate = " " + myDate;
+				else
+					myDate = delimiter + myDate;
+				return myDate;
+			}
+			$(document).ready(function(){
+				var myDate1 = new Date().toTimeString();
+				 $("#result").append('<li>toTimeString time:'+ myDate1 + '</li>');
+				var myDate2 = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+				 $("#result").append('<li>replace time:'+ getCurrentTime("-") + '</li>');
+			});
+         </script>
+		 <div id="index" data-url="index" data-role="page" data-theme="d" >
+			<div data-role="header" data-position="fixed" data-theme="b" >
+				<h1>迎廣OpenStack vAny</h1>
+			</div>
+			<div data-role="content">
+				<div id="result">
+				<ul>
+					<li>time:</li>
+				</ul>
+				</div>
+			</div>
+		</div>
+    </body>
+</html>

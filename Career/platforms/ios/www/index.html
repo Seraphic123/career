@@ -1,0 +1,258 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/jquery.mobile-1.0.min.css">
+        <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+		<script src="js/jquery.mobile-1.0.min.js"></script>
+		<script type="text/javascript" src="js/nas_login.js"></script>
+
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+		<link rel="stylesheet" href="./js/jquery.mobile-1.0.min.css">
+		<script src="./js/jquery-1.7.1.min.js"></script>
+		<script src="./js/jquery.mobile-1.0.min.js"></script>
+		<script type="text/javascript" src="js/login.js"></script>
+
+    </head>
+    <body>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <!--<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+        <script type="text/javascript" charset="utf-8" src="jquery_1.5.2.min.js"></script>-->
+        <script type="text/javascript" src="PushNotification.js"></script>
+        
+        <script type="text/javascript">
+            var pushNotification;
+            
+            function onDeviceReady() {
+		
+				try 
+				{ 
+                	pushNotification = window.plugins.pushNotification;
+                	if (device.platform == 'android' || device.platform == 'Android' ||
+                            device.platform == 'amazon-fireos' ) {
+			pushNotification.register(successHandler, errorHandler, {"senderID":"1019987702717","ecb":"onNotification"});		// required!
+					} else {
+                    	pushNotification.register(tokenHandler, errorHandler, {"badge":"true","sound":"true","alert":"true","ecb":"onNotificationAPN"});	// required!
+                	}
+                }
+				catch(err) 
+				{ 
+					txt="There was an error on this page.\n\n"; 
+					txt+="Error description: " + err.message + "\n\n"; 
+					alert(txt); 
+				} 
+            }
+
+            // handle APNS notifications for iOS
+            function onNotificationAPN(e) {
+                if (e.alert) {
+                     $("#result").append('<li>push-notification: ' + e.alert + '</li>');
+                     // showing an alert also requires the org.apache.cordova.dialogs plugin
+                     navigator.notification.alert(e.alert);
+                }
+                    
+                if (e.sound) {
+                    // playing a sound also requires the org.apache.cordova.media plugin
+                    var snd = new Media(e.sound);
+                    snd.play();
+                }
+                
+                if (e.badge) {
+                    pushNotification.setApplicationIconBadgeNumber(successHandler, e.badge);
+                }
+            }
+            
+           
+            // handle GCM notifications for Android
+            function onNotification(e) {
+                $("#result").append('<li>EVENT from GCM push server(2)-> RECEIVED:' + e.event  + getCurrentTime() + '</li>');
+                
+                switch( e.event )
+                {
+                    case 'registered':
+						if ( e.regid.length > 0 )
+						{
+							$("#result").append('<li>REGISTERED -> REGID:' + e.regid + getCurrentTime() + "</li>");
+							// Your GCM push server needs to know the regID before it can push to this device
+							// here is where you might want to send it the regID for later use.
+/*							
+							$.post("http://163.15.192.205/~hlg1988/regid.php",{regId:e.regid},function(){
+								$("#result").append('<li>REGISTERED -> OK' + "</li>");
+							});
+*/							
+//							HostURL = "http://163.15.192.205/~hlg1988/regid.php";
+							HostURL = "https://163.15.192.185/career/index.php/mobile/regid"; //use REST style
+							var request = $.ajax({
+								url: HostURL,
+								type: "POST",	
+								cache: false,
+								crossDomain: true,
+								success: 
+									function(){
+										$("#result").append('<li>Send regid to proxy server -> OK(3)' + getCurrentTime() + "</li>");
+									},
+								error:
+									function(){
+										$("#result").append('<li>Send regid to proxy server -> Error(3)' + getCurrentTime() + "</li>");
+									},
+								data: {
+									regId:e.regid,
+									platform:'android'
+									},
+								contentType: "application/x-www-form-urlencoded; charset=utf-8",
+								dataType: "html"
+							});				
+						}else
+							$("#result").append('<li>No REGID: - in emulator</li>');
+						
+                    break;
+                    
+                    case 'message':
+                    	// if this flag is set, this notification happened while we were in the foreground.
+                    	// you might want to play a sound to get the user's attention, throw up a dialog, etc.
+                    	if (e.foreground)
+                    	{
+							$("#result").append('<li>--INLINE NOTIFICATION(b)--' + getCurrentTime() + '</li>');
+						      
+						        // on Android soundname is outside the payload. 
+					                // On Amazon FireOS all custom attributes are contained within payload
+					                var soundfile = e.soundname || e.payload.sound;
+					                // if the notification contains a soundname, play it.
+					                var my_media = new Media("/android_asset/www/beep.wav");
+
+							my_media.play();
+						}
+						else
+						{	// otherwise we were launched because the user touched a notification in the notification tray.
+							if (e.coldstart)
+								$("#result").append('<li>--COLDSTART NOTIFICATION(b)--' + getCurrentTime() + '</li>');
+							else
+							$("#result").append('<li>--BACKGROUND NOTIFICATION(b)--' + getCurrentTime() + '</li>');
+						}
+							
+						$("#result").append('<li>MESSAGE(b) -> MSG: ' + e.payload.message + getCurrentTime() + '</li>');
+                        //android only
+						//$("#result").append('<li>MESSAGE -> MSGCNT: ' + e.payload.msgcnt + '</li>');
+                        //amazon-fireos only
+                        $("#result").append('<li>MESSAGE(b) -> TIMESTAMP: ' + e.payload.timeStamp + '</li>');
+                    break;
+                    
+                    case 'error':
+						$("#result").append('<li>ERROR -> MSG:' + e.msg + getCurrentTime() + '</li>');
+                    break;
+                    
+                    default:
+						$("#result").append('<li>EVENT -> Unknown, an event was received and we do not know what it is</li>');
+                    break;
+                }
+            }
+            
+            function tokenHandler (result) {
+                $("#result").append('<li>token: '+ result + getCurrentTime() +'</li>');
+                HostURL = "https://163.15.192.185/career/index.php/mobile/regid"; //use REST style
+                var request = $.ajax({
+                                     url: HostURL,
+                                     type: "POST",
+                                     cache: false,
+                                     crossDomain: true,
+                                     success:
+                                     function(){
+                                     $("#result").append('<li>Send regid to proxy server -> OK(3)' + getCurrentTime() + "</li>");
+                                     },
+                                     error:
+                                     function(){
+                                     $("#result").append('<li>Send regid to proxy server -> Error(3)' + getCurrentTime() + "</li>");
+                                     },
+                                     data: {
+                                     regId:result,
+                                     platform:'iphone'
+                                     },
+                                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                                     dataType: "html"
+                                     });				
+
+                // Your iOS push server needs to know the token before it can push to this device
+                // here is where you might want to send it the token for later use.
+            }
+			function getCurrentTime(delimiter)
+			{
+				var myDate = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+				if(!delimiter)
+					myDate = " " + myDate;
+				else
+					myDate = delimiter + myDate;
+				return myDate;
+			}
+			
+            function successHandler (result) {
+                $("#result").append('<li>success to GCM server(1):'+ result + getCurrentTime() + '</li>');
+            }
+            
+            function errorHandler (error) {
+                $("#result").append('<li>error to GCM server(1):'+ error + getCurrentTime() +'</li>');
+            }
+            document.addEventListener('deviceready', onDeviceReady, true);
+
+         </script>
+         <div id="index" data-role="page" data-theme="c">
+		  <div data-role="header" data-theme="b" align="center">
+			<P>大專生即時就業媒合系統<P>
+		
+		  </div>
+
+		  <div data-role="content" data-theme="c">
+		     <div data-role="fieldcontain">
+				<div id="id">
+					<label for="id">帳號：</label>
+					<input type="text" name="username" id="username" placeholder="學號....." data-theme="d">
+				</div> 
+				<br><br>
+				<div id="password">
+					<label for="password">密碼：</label>
+					<input type="password" name="password" id="psw" placeholder="密碼....." data-theme="d">
+				</div> 
+				<br><br>
+				<div id ="login">
+				     <input type="button"  id="login1" data-theme="b" value="登入"/>
+				</div>
+			</div>
+		  </div>
+
+		  <div data-role="footer" data-theme="b">
+		  <h1></h1>
+		  </div>
+		</div> 
+
+
+
+
+
+
+
+         
+		 <!--
+			<div data-role="header" data-position="fixed" data-theme="b" >
+				<h1>迎廣OpenStack vAny</h1>
+				<div data-role="navbar">
+
+				</div>	
+			</div>
+			<div data-role="content">
+
+				<div id="result">
+				</div>
+				
+			
+		</div>
+		
+		<div id="home">
+			<div id="app-status-div">
+				<ul id="app-status-ul">
+					<li>Cordova PushNotification Plugin Demo</li>
+				</ul>				
+			</div>
+		</div>
+		-->
+    </body>
+</html>

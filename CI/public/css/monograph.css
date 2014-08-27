@@ -1,0 +1,98 @@
+html{
+    height: 100%
+}
+body{
+    height: 100%;
+    text-align: center;
+    margin: 0 auto;
+	/*
+	background-image:url(../pic/b6.gif);
+	background-repeat: repeat-x;
+	background-size:1000px 1000px;
+	*/
+    /*background-image:url(../pic/b13.gif);*/
+	background-image:url(../pic/b8.jpg);
+	background-repeat: repeat;
+
+	
+}
+#login{
+	background-image:url(../pic/b111.jpg);
+	background-repeat: repeat;
+}
+
+.wrapper{
+    width: 1000px;
+    /*height: 200px;*/
+	height: 100%;
+    min-height: 100%;
+    margin:auto;
+	background-image:url(../pic/b8.jpg);/**/
+    /*background-image:url(../pic/b13.gif);  tab body background*/
+	background-repeat: repeat;
+	padding-bottom: 100px;
+}
+.header{
+	background-image:url(../pic/b1.jpg);
+	background-repeat: repeat;
+	border-style:outset;
+}
+.content{
+    /*height: 200px;*/
+	height: 100%;
+	/*height: inherit;*/
+    /*padding-bottom: 200px;*/
+}
+.footer{
+    width: 1000px;
+    height: 50px;
+    margin: 0 auto;
+    position: relative;
+    /*margin-top: 480px;*/
+	background-image:url(../pic/b1.jpg);
+	background-repeat: repeat;
+	border-style:outset;
+    clear: both;
+	margin-top: 5%;
+}
+.clistfL{
+    float: left;
+    width: 199px;
+    margin-left: 1px;
+    background-color: burlywood;
+}
+.wayfL{
+    float: left;
+    width: 499px;
+    margin-left: 1px;
+    margin-top: 1px;
+    background-color: darkorange;
+}
+.ccfL{
+    float: left;
+    height: 467px;
+    background-color: blue;
+}.ccfR{
+    float: right;
+    height: 467px;
+    background-color: gold;
+}
+.pfL{
+    float: left;
+}
+.pw250{
+    width: 250px;
+}
+.textW750{
+    margin:30px auto; 
+    width: 750px;
+    text-align: left;
+}
+.serfL{
+    float: left;
+    width: 500px;
+}
+.bingobtn{
+    width: 50px;
+    height: 50px;
+}

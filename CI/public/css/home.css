@@ -1,0 +1,32 @@
+#tab1{
+	/*
+	background: #99BBFF;
+	*/
+	background-image:url(../pic/b6.jpg);
+	background-repeat: repeat;
+}
+
+#tab2{
+	/*
+	background: #EEFFBB;
+	*/
+	/*background-image:url(../pic/b111.jpg);*/
+    background-image:url(../pic/b13.gif);/*  tab body background*/
+	background-repeat: repeat;
+}
+
+#tab3{
+	/*
+	background: #FFEE99;
+	*/
+	/*background-image:url(../pic/b10.jpg);*/
+    background-image:url(../pic/b13.gif);/*  tab body background*/
+	background-repeat: repeat;
+}
+
+body{
+	background: #D0E4FE;	
+	margin: 0 auto;
+    text-align: center;
+	height:100%;
+}
